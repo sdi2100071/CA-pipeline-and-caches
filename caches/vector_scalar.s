@@ -9,11 +9,13 @@
 #     [ An x s ]                                #
 #     vector x scalar                           #
 #################################################
-# $s0 --> scalar
-# $s1 --> N
-# $a0 --> vector
-# $t2 --> current vector element
-# $s3 --> result
+
+#################################################
+# $s0 --> scalar                                #
+# $s1 --> N                                     #
+# $a0 --> vector                                #
+# $t2 --> current vector element                #
+# $s3 --> result                                #
 #################################################
 
 
@@ -38,15 +40,20 @@ loop:
     beq $s1, $zero, Exit 
     lw $t2, 0($a0)          # Load vector element
     
-    mul $t3, $t2, $s0       # Multiply element * scalar
-    sw $t3, 0($s3)          # Store result
+    mult $t2, $s0
+
+    # Check for arithmetic overflow.
+    mfhi $t6
+    mflo $t7
+    sw $t7, 0($s3)          # Store result.
     lw $t5, 0($s3)
+    sra $t7, $t7, 31
 
     addi $s3, $s3, 4        # Load address of next result
     addi $a0, $a0, 4        # Load address of next element
     addi $s1, $s1, -1       # Reduce element counter
 
-    j loop
+    beq $t6, $t7, loop
 
 Exit:   
         li $v0, 10
@@ -60,7 +67,7 @@ Exit:
 
     .data
 n: .word 8
-scalar: .word 2
+scalar: .word 20000
 vector: .word 1, 2, 3, 4, 5, 6, 7, 8
 result: .space 32
 
