@@ -32,12 +32,21 @@ Loop:                                 # Calculates matrix Z
 				lw $t1, 0 ($t7)       # Value from Y[j][k].
 				mul $t3, $t0, $t1     # Result of X[i][j] * Y[j][k].
 				add $t2, $t2, $t3     # Accumulator for the sum X[i][j] * Y[j][k].
+                
+                mult $t1, $t0
+                # Check for arithmetic overflow.
+                mfhi $s5
+                mflo $s6
+                sw $s5, 0($s3)          # Store result.
+                sra $s5, $s5, 31
+
 				
 				addi $t6, $t6, 4      # Sets t6 as X[i][j+1]
 				addi $t7, $t7, 128    # Sets t7 as Y[j+1][k] (assuming each line has 32 words)
 				addi $s2, $s2, 1      # Sets j to j+1
-			
-			j inner  
+                
+            beq $s6, $s5, inner
+            j out
 		out3:  
 	
 		    sw $t2, 0 ($t5)           # This stores Z[i][k] to memory
