@@ -67,8 +67,10 @@ Exit:
     .data
 n: .word 16
 scalar: .word 20
-vector: .word 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 43
-result: .space 32
+vector: .word 1, 2, 3, 4, 5, 6, 7, 8
+        .word 9, 10, 11, 12, 13 , 14 , 15, 16
+        .word 17, 18 , 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
+result: .space 2000
 
 
 
