@@ -36,7 +36,7 @@ __start:
     la $s3, result   # Load result
 
 loop:
-
+    mflo $t7
     beq $s1, $zero, Exit 
     lw $t2, 0($a0)          # Load vector element
     
@@ -65,9 +65,9 @@ Exit:
 #################################################
 
     .data
-n: .word 8
-scalar: .word 20000
-vector: .word 1, 2, 3, 4, 5, 6, 7, 8
+n: .word 16
+scalar: .word 20
+vector: .word 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 43
 result: .space 32
 
 
