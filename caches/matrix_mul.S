@@ -6,11 +6,12 @@
 
 
 main:
-    li $s0, 4 
-    li $t3, 0
-    li $s3, 0
-    li $s5, 0
-    li $s6, 2 # Line blocks
+    addi $s0, $zero, 4
+    addi $t3, $zero, 0
+    addi $s3, $zero, 0
+    addi $s5, $zero, 0
+    addi $s6, $zero, 2
+
     xor $t4, $t4, $t4
     xor $t8, $t8, $t8
 
@@ -19,7 +20,6 @@ main:
     la $t7, array_y          # Load address of array_y into $t7
     j next_element
 
-    
     next_element_block_x:
         xor $s1, $s1, $s1
         xor $s3, $s3, $s3
@@ -77,7 +77,6 @@ main:
     next_element:
         lw $t0, 0($t6)    
         lw $t1, 0($t7)           
-        # lw $t2, 0($t5)         
 
         mult $t0, $t1
         mfhi $t2 
@@ -162,11 +161,6 @@ main:
     exit:
         li $v0, 10            # Exit syscall
         syscall
-
-
-
-
-
 
 .end main
 
