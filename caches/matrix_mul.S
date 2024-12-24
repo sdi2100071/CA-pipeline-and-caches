@@ -1,20 +1,18 @@
 .text
-.globl _start
+.globl main
 .set noat
 .set noreorder
-.ent _start
+.ent main
 
 
-li $s0, 4 
-li $t3, 0
-li $s3, 0
-li $s5, 0
-li $s6, 2 # Line blocks
-xor $t4, $t4, $t4
-xor $t8, $t8, $t8
-
-
-_start:
+main:
+    li $s0, 4 
+    li $t3, 0
+    li $s3, 0
+    li $s5, 0
+    li $s6, 2 # Line blocks
+    xor $t4, $t4, $t4
+    xor $t8, $t8, $t8
 
     la $t5, array_z          # Load address of array_z into $t5
     la $t6, array_x          # Load address of array_x into $t6
@@ -79,7 +77,22 @@ _start:
     next_element:
         lw $t0, 0($t6)    
         lw $t1, 0($t7)           
-        lw $t2, 0($t5)           
+        # lw $t2, 0($t5)         
+
+        mult $t0, $t1
+        mfhi $t2 
+        mflo $t9
+
+        lw $s7, 0($t5)
+        add $s7, $s7, $t9
+        sw $s7, 0($t5)    
+        
+        sra $t9, $t9, 31
+        bne $t9, $t2, exit 
+        mflo $t9
+
+
+        xor $t9, $t9, $t9
 
         addi $t6, $t6, 4
         addi $t7, $t7, 4
@@ -111,51 +124,89 @@ _start:
         slt $s2, $s5, $s6     
         bne $s2, $zero, next_element_block_x  
 
+    print_array:
+        la $t0, array_z       # Load address of the array into $t0
+        li $t1, 64            # Number of elements to print
+        li $t2, 4             # Size of each element in bytes
+        li $t3, 8             # Counter for printing rows (8 elements per row)
+
+    print_loop:
+        beq $t1, $zero, exit  # Break if all elements are printed
+
+        lw $a0, 0($t0)        # Load current element into $a0
+        li $v0, 1             # Print integer syscall
+        syscall
+
+        # Print a space after the number
+        li $v0, 11            # Print character syscall
+        li $a0, 32            # ASCII code for space
+        syscall
+
+        addi $t0, $t0, 4      # Move to the next word (4 bytes)
+        addi $t1, $t1, -1     # Decrement total counter
+        addi $t3, $t3, -1     # Decrement row counter
+
+        beq $t3, $zero, print_newline  # If 8 elements printed, go to newline printing
+
+        j print_loop          # Continue the loop
+
+    print_newline:
+        # Print a newline after 8 elements
+        li $v0, 11            # Print character syscall
+        li $a0, 10            # ASCII code for newline
+        syscall
+
+        li $t3, 8             # Reset row counter
+        j print_loop          # Continue printing next row
+
     exit:
-        li $v0, 10       # Load exit syscall code into $v0
-        syscall          # Trigger the syscall to terminate the program
+        li $v0, 10            # Exit syscall
+        syscall
 
 
-.end _start
+
+
+
+
+.end main
 
 .data
-.org 10000000
+# .org 10000000
 
 
 array_x:
-    .word 1, 11, 111, 1111, 91, 911, 9111, 91111
-    .word 2, 22, 222, 2222, 92, 922, 9222, 92222
-    .word 3, 33, 333, 3333, 93, 933, 9333, 93333
-    .word 4, 44, 444, 4444, 94, 944, 9444, 94444 
-    .word 5, 55, 555, 5555, 95, 955, 9555, 95555
-    .word 6, 66, 666, 6666, 96, 966, 9666, 96666
-    .word 7, 77, 777, 7777, 97, 977, 9777, 97777
-    .word 8, 88, 888, 8888, 98, 988, 9888, 98888
+    .word 1, 1, 1, 1, 1, 1, 1, 1
+    .word 2, 2, 2, 2, 2, 2, 2, 2
+    .word 3, 3, 3, 3, 3, 3, 3, 3
+    .word 4, 4, 4, 4, 4, 4, 4, 4 
+    .word 5, 5, 5, 5, 5, 5, 5, 5
+    .word 6, 6, 6, 6, 6, 6, 6, 6
+    .word 7, 7, 7, 7, 7, 7, 7, 7
+    .word 8, 8, 8, 8, 8, 8, 8, 8
 
 
 array_y:
-    .word 1, 11, 111, 1111, 91, 911, 9111, 91111
-    .word 2, 22, 222, 2222, 92, 922, 9222, 92222
-    .word 3, 33, 333, 3333, 93, 933, 9333, 93333
-    .word 4, 44, 444, 4444, 94, 944, 9444, 94444
-    .word 5, 55, 555, 5555, 95, 955, 9555, 95555
-    .word 6, 66, 666, 6666, 96, 966, 9666, 96666
-    .word 7, 77, 777, 7777, 97, 977, 9777, 97777
-    .word 8, 88, 888, 8888, 98, 988, 9888, 98888
+    .word 1, 1, 1, 1, 1, 1, 1, 1
+    .word 2, 2, 2, 2, 2, 2, 2, 2
+    .word 3, 3, 3, 3, 3, 3, 3, 3
+    .word 4, 4, 4, 4, 4, 4, 4, 4 
+    .word 5, 5, 5, 5, 5, 5, 5, 5
+    .word 6, 6, 6, 6, 6, 6, 6, 6
+    .word 7, 7, 7, 7, 7, 7, 7, 7
+    .word 8, 8, 8, 8, 8, 8, 8, 8
+
 
 array_z:
-    .word 1, 11, 111, 1111, 91, 911, 9111, 91111
-    .word 2, 22, 222, 2222, 92, 922, 9222, 92222
-    .word 3, 33, 333, 3333, 93, 933, 9333, 93333
-    .word 4, 44, 444, 4444, 94, 944, 9444, 94444
-    .word 5, 55, 555, 5555, 95, 955, 9555, 95555
-    .word 6, 66, 666, 6666, 96, 966, 9666, 96666
-    .word 7, 77, 777, 7777, 97, 977, 9777, 97777
-    .word 8, 88, 888, 8888, 98, 988, 9888, 98888
+    .word 0, 0, 0, 0, 0, 0, 0, 0
+    .word 0, 0, 0, 0, 0, 0, 0, 0
+    .word 0, 0, 0, 0, 0, 0, 0, 0
+    .word 0, 0, 0, 0, 0, 0, 0, 0
+    .word 0, 0, 0, 0, 0, 0, 0, 0
+    .word 0, 0, 0, 0, 0, 0, 0, 0
+    .word 0, 0, 0, 0, 0, 0, 0, 0
+    .word 0, 0, 0, 0, 0, 0, 0, 0
 
 
 
 
-# array_z:
-#     .space 100000              # 4x4 matrix, 64 bytes
 
