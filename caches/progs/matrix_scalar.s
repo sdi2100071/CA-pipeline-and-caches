@@ -57,7 +57,7 @@ outer:
     beq $t6, $t7, outer
 
 overflow:   
-        li $v0, 10
+        addi $v0, $zero, 10
         syscall 
 
 reinit:
