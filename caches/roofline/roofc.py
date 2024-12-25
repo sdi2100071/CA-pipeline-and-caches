@@ -3,12 +3,14 @@ import numpy as np
 
 # Example Data
 peak_performance = 100 * 10**6  # GFLOPS
-max_bandwidth = 0.0666 * 10**8  # GB/s
-arithmetic_intensity = [0.020, 0.020, 0.020, 0.023, 0.023, 0.023, 0.016, 0.016, 0.016]  # Example AI values
-performance = [6.4 * 10**3, 12.8* 10**3, 25.6* 10**3, 6.88* 10**3, 35.44* 10**3, 7.51* 10**3, 5.71*10**3, 0.072*10**3, 0.071]  # Measured performance
-dot_colors = ['#ff9999', "red", '#b30000', '#99ff99', '#33cc33', '#006600', '#ccccff', '#6666ff', '#0000cc']  # Defined colors
-n_range = ["8", "16", "32", "8", "16", "32", "8", "16", "32"]
-programs = ["prog1", "prog1", "prog1", "prog2", "prog2", "prog2", "prog3", "prog3", "prog3"]
+max_bandwidth = 5.33   * 10**8  # GB/s
+
+arithmetic_intensity = [0.022, 0.022, 0.022, 0.023, 0.023, 0.023]  # Example AI values
+performance = [1.01 * 10**3, 1.41 *10**3, 1.76*10**3, 1.70*10**3,21.2 *10**3, 22.6*10**3]  # Measured performance
+
+dot_colors = ['#ff9999', "red", '#b30000', '#99ff99', '#33cc33', '#006600']  # Defined colors
+n_range = ["8", "16", "32", "8", "16", "32"]
+programs = ["prog1", "prog1", "prog1", "prog2", "prog2", "prog2"]
 
 # Create AI range
 ai_range = np.logspace(-5, 2, 100)
@@ -30,10 +32,10 @@ for i, (ai, perf, color, prog) in enumerate(zip(arithmetic_intensity, performanc
 
 # Labels and Scale
 plt.xscale('log', base=2)
-plt.yscale('log', base=2)
+plt.yscale('log',base=2)
 plt.xlabel("Arithmetic Intensity (Multiplications/Byte - MPB)", fontsize=14)
 plt.ylabel("Performance (Multiplications/Second - MPS)", fontsize=14)
-plt.title("Roofline Model for MIPS-A", fontsize=16)
+plt.title("Roofline Model for MIPS-C", fontsize=16)
 
 # Add peak performance line
 plt.axhline(peak_performance, color="red", linestyle="--", label="Peak Performance", linewidth=1.5)
