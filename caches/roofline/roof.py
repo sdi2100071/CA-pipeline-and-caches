@@ -4,45 +4,43 @@ import numpy as np
 # Example Data
 peak_performance = 100 * 10**6  # GFLOPS
 max_bandwidth = 0.0666 * 10**8  # GB/s
-arithmetic_intensity = [0.48, 0.48, 0.48]  # Example AI values
-performance = [0.64 * 10**6, 0.68 * 10**6, 0.73 * 10**6]  # Measured performance
-
-# Define colors for each performance point
-dot_colors = ["red", "green", "orange"]  # Different colors for each point
-n_range = [8, 16, 32]
-label = ["prog 1", "prog1", "prog1"]
+arithmetic_intensity = [0.022, 0.020, 0.020, 0.023, 0.023, 0.023]  # Example AI values
+performance = [6.4 * 10**3, 12.8* 10**3, 25.6* 10**3, 6.88* 10**3, 35.44* 10**3, 7.51* 10**3]  # Measured performance
+dot_colors = ['#ff9999', "red", '#b30000', '#99ff99', '#33cc33', '#006600']  # Defined colors
+n_range = ["8", "16", "32", "8", "16", "32"]
+programs = ["prog1", "prog1", "prog1", "prog2", "prog2", "prog2"]
 
 # Create AI range
-ai_range = np.logspace(-5, 2, 100)  # Covers AI from 0.01 to 100
+ai_range = np.logspace(-5, 2, 100)
 
 # Compute Roofline limits
-roofline_memory = ai_range * max_bandwidth  # Memory-bound line
-roofline_memory = np.minimum(roofline_memory, peak_performance)
+roofline_memory = ai_range * max_bandwidth
+roofline_performance = np.minimum(roofline_memory, peak_performance)
 
-# Plot
-plt.figure(figsize=(10, 6))
+# Plot setup
+plt.figure(figsize=(12, 8))
 
 # Plot the roofline
-plt.plot(ai_range, roofline_memory, label="Roofline", color="blue", lw=2)
+plt.plot(ai_range, roofline_performance, label="Roofline", color="blue", lw=2)
 
-# Plot each performance point with a different color
-for i, (ai, perf, color, label) in enumerate(zip(arithmetic_intensity, performance, dot_colors, label)):
-    plt.scatter(ai, perf, color=color, label=f"n = {n_range[i]}", zorder=5)
-    plt.text(ai, perf, label, fontsize=10, ha='right', va='bottom')
+# Plot each performance point
+for i, (ai, perf, color, prog) in enumerate(zip(arithmetic_intensity, performance, dot_colors, programs)):
+    plt.scatter(ai, perf, color=color, edgecolor='black', s=35, label=f"{prog} (n={n_range[i]})", zorder=5)
+    # plt.text(ai * 1.1, perf * 1.1, f"n={n_range[i]}", fontsize=10, color=color)
 
 # Labels and Scale
 plt.xscale('log', base=2)
 plt.yscale('log', base=2)
-plt.xlabel("Arithmetic Intensity (Multiplications/Byte - MPB)", fontsize=12)
-plt.ylabel("Performance (Multiplications/Second - MPS)", fontsize=12)
-plt.title("Roofline Model MIPS-A", fontsize=14)
+plt.xlabel("Arithmetic Intensity (Multiplications/Byte - MPB)", fontsize=14)
+plt.ylabel("Performance (Multiplications/Second - MPS)", fontsize=14)
+plt.title("Roofline Model for MIPS-A", fontsize=16)
 
 # Add peak performance line
-plt.axhline(peak_performance, color="red", linestyle="--", label="Peak Performance")
+plt.axhline(peak_performance, color="red", linestyle="--", label="Peak Performance", linewidth=1.5)
 
 # Add legend and grid
-plt.legend()
-plt.grid(True, which="both", linestyle="--", linewidth=0.5)
+plt.legend(fontsize=10, loc="lower right")
+plt.grid(True, which="both", linestyle="--", linewidth=0.7, alpha=0.7)
 
 # Show the plot
 plt.show()
