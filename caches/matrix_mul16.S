@@ -6,94 +6,93 @@
 
 
 main:
-    addi $s0, $zero, 4
-    addi $t3, $zero, 0
-    addi $s3, $zero, 0
-    addi $s5, $zero, 0
-    addi $s6, $zero, 4
+    addi $s0, $zero, 4          # 4x4 kernel.
+    addi $t3, $zero, 0          # Clean $t3
+    addi $s3, $zero, 0          # Clean $s3
+    addi $s5, $zero, 0          # Clean $s5
+    addi $s6, $zero, 4          # Amount of blocks to move right.
 
-    xor $t4, $t4, $t4
-    xor $t8, $t8, $t8
+    xor $t4, $t4, $t4           # Clear $t4
+    xor $t8, $t8, $t8           # Clear $t8
 
-    la $t5, array_z          # Load address of array_z into $t5
-    la $t6, array_x          # Load address of array_x into $t6
-    la $t7, array_y          # Load address of array_y into $t7
-    j next_element
+    la $t5, array_z             # Load address of array_z into $t5
+    la $t6, array_x             # Load address of array_x into $t6
+    la $t7, array_y             # Load address of array_y into $t7
+    j next_element              # Jump to next_element
 
     next_element_block_x:
-        xor $s1, $s1, $s1
-        xor $s3, $s3, $s3
-        xor $s4, $s4, $s4
-        xor $t3, $t3, $t3
-        xor $t4, $t4, $t4
-        addi $t5, $t5, 4
+        xor $s1, $s1, $s1       # Clear $s1
+        xor $s3, $s3, $s3       # Clear $s3
+        xor $s4, $s4, $s4       # Clear $s4
+        xor $t3, $t3, $t3       # Clear $t3
+        xor $t4, $t4, $t4       # Clear $t4
+        addi $t5, $t5, 4        # Iterate the next element
 
     first_element_block_y:
-        la $t7, array_y          
-        j next_element
+        la $t7, array_y         # Load address of array_y into $t7       
+        j next_element          # Jump to next_element      
 
 
     next_element_block_y:
-        xor $s1, $s1, $s1
-        xor $s3, $s3, $s3
-        xor $t3, $t3, $t3
-        xor $t4, $t4, $t4
-        addi $t5, $t5, -188 #
+        xor $s1, $s1, $s1       # Clear $s1
+        xor $s3, $s3, $s3       # Clear $s3
+        xor $t3, $t3, $t3       # Clear $t3
+        xor $t4, $t4, $t4       # Clear $t4
+        addi $t5, $t5, -188     # Move block to the right.
 
 
     first_previous_block_x:
-        addi $t6, $t6, -256 #
-        j next_element
+        addi $t6, $t6, -256     # Jump at the start of the previous block. 
+        j next_element          # Jump to next_element
 
     next_blocks_right_both:
-        xor $s1, $s1, $s1
-        xor $t4, $t4, $t4
-        xor $t3, $t3, $t3
+        xor $s1, $s1, $s1      # Clear $s1
+        xor $t4, $t4, $t4      # Clear $t4
+        xor $t3, $t3, $t3      # Clear $t3
 
-        addi $t6, $t6, -192 #
-        addi $t7, $t7, -192 #
-        addi $t5, $t5, -204 # 
+        addi $t6, $t6, -192    # 3 * n * 4
+        addi $t7, $t7, -192    # 3 * n * 4
+        addi $t5, $t5, -204    # (3 * n + 3 ) * 4   
 
         j next_element
     
     next_line_x:
-        xor $t4, $t4, $t4
-        addi $t6, $t6, 64  #
-        addi $t5, $t5, 48  #
+        xor $t4, $t4, $t4    # Clear $t4
+        addi $t6, $t6, 64    # Increment $t6 by 32
+        addi $t5, $t5, 48    # Increment $t5 by 16
 
     current_first_block_line_y:
-        addi $t7, $t7, -256 #
+        addi $t7, $t7, -256 # Move at the first element of the first block of the line
 
     # Reset x_line and go to next line for y
     next_line_y: 
-        xor $t3, $t3, $t3
-        addi $t7, $t7, 48 #
-        addi $t5, $t5, 4
+        xor $t3, $t3, $t3       # Clear $t3
+        addi $t7, $t7, 48       # (n - 4) * 4
+        addi $t5, $t5, 4        # Next element in the block
 
     start_line_x:
-        addi $t6, $t6, -16 
+        addi $t6, $t6, -16      # Move at the start of the line. 4x4 kernel.
 
 
     next_element:
-        lw $t0, 0($t6)    
-        lw $t1, 0($t7)           
+        lw $t0, 0($t6)          # Load word from address in $t6 into $t0
+        lw $t1, 0($t7)          # Load word from address in $t7 into $t1
 
-        mult $t0, $t1
-        mfhi $t2 
-        mflo $t9
+        mult $t0, $t1           # Multiply $t0 and $t1
+        mfhi $t2                # Move high result to $t2
+        mflo $t9                # Move low result to $t9
 
-        lw $s7, 0($t5)
-        add $s7, $s7, $t9
-        sw $s7, 0($t5)    
-        
-        sra $t9, $t9, 31
-        bne $t9, $t2, exit 
-        mflo $t9
+        lw $s7, 0($t5)          # Load word from address in $t5 into $s7
 
+        sra $t9, $t9, 31        # Arithmetic shift right $t9 by 31
+        bne $t9, $t2, exit      # Overflow check
+        mflo $t9                # Move low result to $t9
 
-        xor $t9, $t9, $t9
-
+        add $s7, $s7, $t9       # Add $t9 to $s7
+        xor $t9, $t9, $t9        # Clear $t9
         addi $t6, $t6, 4
+        sw $s7, 0($t5)          # Store word from $s7 into address in $t5
+
         addi $t7, $t7, 4
 
         addi $t3, $t3, 1
@@ -125,9 +124,9 @@ main:
 
      print_array:
         la $t0, array_z       # Load address of the array into $t0
-        li $t1, 256            # Number of elements to print
+        li $t1, 256           # Number of elements to print
         li $t2, 4             # Size of each element in bytes
-        li $t3, 16             # Counter for printing rows (8 elements per row)
+        li $t3, 16            # Counter for printing rows (8 elements per row)
 
     print_loop:
         beq $t1, $zero, exit  # Break if all elements are printed
@@ -155,7 +154,7 @@ main:
         li $a0, 10            # ASCII code for newline
         syscall
 
-        li $t3, 16             # Reset row counter
+        li $t3, 16            # Reset row counter
         j print_loop          # Continue printing next row
 
     exit:
