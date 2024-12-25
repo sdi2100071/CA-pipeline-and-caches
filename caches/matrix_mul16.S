@@ -83,16 +83,16 @@ main:
         mflo $t9                # Move low result to $t9
 
         lw $s7, 0($t5)          # Load word from address in $t5 into $s7
-        add $s7, $s7, $t9       # Add $t9 to $s7
-        sw $s7, 0($t5)          # Store word from $s7 into address in $t5
 
         sra $t9, $t9, 31        # Arithmetic shift right $t9 by 31
         bne $t9, $t2, exit      # Overflow check
         mflo $t9                # Move low result to $t9
 
+        add $s7, $s7, $t9       # Add $t9 to $s7
         xor $t9, $t9, $t9        # Clear $t9
-
         addi $t6, $t6, 4
+        sw $s7, 0($t5)          # Store word from $s7 into address in $t5
+
         addi $t7, $t7, 4
 
         addi $t3, $t3, 1
