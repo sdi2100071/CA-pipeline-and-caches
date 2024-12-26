@@ -5,12 +5,12 @@ import numpy as np
 peak_performance = 100 * 10**6  # GFLOPS
 max_bandwidth = 5.33   * 10**8  # GB/s
 
-arithmetic_intensity = [0.022, 0.022, 0.022, 0.023, 0.023, 0.023]  # Example AI values
-performance = [1.01 * 10**3, 1.41 *10**3, 1.76*10**3, 1.70*10**3,21.2 *10**3, 22.6*10**3]  # Measured performance
+arithmetic_intensity = [0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 2, 2, 2]  # Example AI values
+performance = [1.73 * 10**6, 2.29 *10**6, 2.73*10**6, 2.24*10**6,3.12 *10**6, 3.31*10**6, 3.89*10**6, 7.46*10**6, 4.61*10**6]  # Measured performance
 
-dot_colors = ['#ff9999', "red", '#b30000', '#99ff99', '#33cc33', '#006600']  # Defined colors
-n_range = ["8", "16", "32", "8", "16", "32"]
-programs = ["prog1", "prog1", "prog1", "prog2", "prog2", "prog2"]
+dot_colors = ['#ff9999', "red", '#b30000', '#99ff99', '#33cc33', '#006600', '#ccccff', '#6666ff', '#0000cc']  # Defined colors
+n_range = ["8", "16", "32", "8", "16", "32", "8", "16", "32"]
+programs = ["prog1", "prog1", "prog1", "prog2", "prog2", "prog2", "prog3", "prog3", "prog3"]
 
 # Create AI range
 ai_range = np.logspace(-5, 2, 100)
@@ -35,7 +35,7 @@ plt.xscale('log', base=2)
 plt.yscale('log',base=2)
 plt.xlabel("Arithmetic Intensity (Multiplications/Byte - MPB)", fontsize=14)
 plt.ylabel("Performance (Multiplications/Second - MPS)", fontsize=14)
-plt.title("Roofline Model for MIPS-C", fontsize=16)
+plt.title("Roofline Model for MIPS-B", fontsize=16)
 
 # Add peak performance line
 plt.axhline(peak_performance, color="red", linestyle="--", label="Peak Performance", linewidth=1.5)

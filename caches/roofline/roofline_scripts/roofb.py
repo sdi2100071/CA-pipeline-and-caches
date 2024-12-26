@@ -5,11 +5,13 @@ import numpy as np
 peak_performance = 100 * 10**6  # GFLOPS
 max_bandwidth = 4   * 10**8  # GB/s
 
-arithmetic_intensity = [0.020, 0.020, 0.020, 0.023, 0.023, 0.023, 0.016, 0.016, 0.016]  # Example AI values
-performance = [1.64 * 10**3, 2.25*10**3, 2.76*10**3, 2.63*10**3, 2.97 *10**3, 30.91*10**3, 3.96*10**3, 4.44 *10**3, 4.62*10**3]  # Measured performance
+arithmetic_intensity = [0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 2, 2, 2]  # Example AI values
+performance = [1.64 * 10**6, 2.25*10**6, 5.53*10**6, 2.7*10**6, 3.27*10**6, 3.48*10**6, 3.96*10**6, 4.44 *10**6, 4.62*10**6]  # Measured performance
+
 dot_colors = ['#ff9999', "red", '#b30000', '#99ff99', '#33cc33', '#006600', '#ccccff', '#6666ff', '#0000cc']  # Defined colors
 n_range = ["8", "16", "32", "8", "16", "32", "8", "16", "32"]
 programs = ["prog1", "prog1", "prog1", "prog2", "prog2", "prog2", "prog3", "prog3", "prog3"]
+
 # Create AI range
 ai_range = np.logspace(-5, 2, 100)
 
@@ -33,7 +35,7 @@ plt.xscale('log', base=2)
 plt.yscale('log', base=2)
 plt.xlabel("Arithmetic Intensity (Multiplications/Byte - MPB)", fontsize=14)
 plt.ylabel("Performance (Multiplications/Second - MPS)", fontsize=14)
-plt.title("Roofline Model for MIPS-B", fontsize=16)
+plt.title("Roofline Model for MIPS-C", fontsize=16)
 
 # Add peak performance line
 plt.axhline(peak_performance, color="red", linestyle="--", label="Peak Performance", linewidth=1.5)

@@ -1,11 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Example Data
-peak_performance = 100 * 10**6  # GFLOPS
-max_bandwidth = 0.0666 * 10**8  # GB/s
-arithmetic_intensity = [0.020, 0.020, 0.020, 0.023, 0.023, 0.023, 0.016, 0.016, 0.016]  # Example AI values
-performance = [6.4 * 10**3, 12.8* 10**3, 25.6* 10**3, 6.88* 10**3, 35.44* 10**3, 7.51* 10**3, 5.71*10**3, 0.072*10**3, 0.071]  # Measured performance
+peak_performance = 100 * 10**6
+max_bandwidth = 0.0666 * 10**8
+
+arithmetic_intensity = [0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 2, 2, 2]  # Example AI values
+
+performance = [5  , 5.55, 5.88, 5.57, 8, 6.105, 0.072, 0.07192175, 0.07196395]  # Measured performance
+
+
 dot_colors = ['#ff9999', "red", '#b30000', '#99ff99', '#33cc33', '#006600', '#ccccff', '#6666ff', '#0000cc']  # Defined colors
 n_range = ["8", "16", "32", "8", "16", "32", "8", "16", "32"]
 programs = ["prog1", "prog1", "prog1", "prog2", "prog2", "prog2", "prog3", "prog3", "prog3"]
